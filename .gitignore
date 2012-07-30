@@ -1,3 +1,4 @@
 bin/
 ebin/
 /rel/thenode/
+.erlang

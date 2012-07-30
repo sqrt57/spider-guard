@@ -1,5 +1,5 @@
 
--module(device_sup).
+-module(device_conv_find_workers_sup).
 
 -behaviour(supervisor).
 
@@ -8,9 +8,6 @@
 
 %% Supervisor callbacks
 -export([init/1]).
-
-%% Helper macro for declaring children of supervisor
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
 
 %% ===================================================================
 %% API functions
@@ -24,11 +21,10 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, {{one_for_one, 5, 10},
-          [{conv_find_sup,
-              {device_conv_find_sup, start_link, []},
-              permanent,
-              2000,
-              supervisor,
-              [device_conv_find_sup]}]}}.
-
+    {ok, {{simple_one_for_one, 5, 10},
+          [{conv_find_worker,
+              {device_conv_find_worker, start_link, []},
+              temporary,
+              1000,
+              worker,
+              [device_conv_find_worker]}]}}.
