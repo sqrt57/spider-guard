@@ -1,3 +1,8 @@
+%% ===================================================================
+%% Server.
+%% Finds converters connected through LAN.
+%% ===================================================================
+
 -module(device_conv_find).
 -behaviour(gen_server).
 -define(SERVER, ?MODULE).
@@ -30,15 +35,25 @@
 %% Public API
 %% ------------------------------------------------------------------
 
+% Sends broadcast queries on all network interfaces,
+% collects all replies from converters and returns them.
 -spec find_broadcast() -> [converter_info_rec()].
 find_broadcast() ->
     find_broadcast(?MODULE).
 
+% Sends broadcast queries on all network interfaces,
+% collects all replies from converters and returns them.
+% The server which carries the search is specified.
 -spec find_broadcast(ServerRef) -> [converter_info_rec()] when
     ServerRef :: server_ref().
 find_broadcast(Server) ->
     gen_server:call(Server, {find, broadcast}, 3000).
 
+% Sends query through network to a specific converter at Address
+% and receives reply.
+% Returns {ok, Result} when result is received.
+% Returns timeout if no result is received during specific time interval.
+% Returns cancelled if worker is killed during search.
 -spec find_byaddress(Address) -> {ok, converter_info_rec()}
                                | timeout
                                | cancelled when
@@ -46,6 +61,12 @@ find_broadcast(Server) ->
 find_byaddress(Address) ->
     find_byaddress(?MODULE, Address).
 
+% Sends query through network to a specific converter at Address
+% and receives reply.
+% Returns {ok, Result} when result is received.
+% Returns timeout if no result is received during specific time interval.
+% Returns cancelled if worker is killed during search.
+% The server which carries the search is specified.
 -spec find_byaddress(ServerRef, Address) -> {ok, converter_info_rec()}
                                           | timeout
                                           | cancelled when

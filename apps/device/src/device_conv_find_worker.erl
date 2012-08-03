@@ -1,3 +1,8 @@
+%% ===================================================================
+%% Temporary worker.
+%% Performs one operation and exits.
+%% Finds converter/converters connected through LAN.
+%% ===================================================================
 
 -module(device_conv_find_worker).
 
